@@ -529,6 +529,12 @@ struct aiMetadata {
         return !(lhs == rhs);
     }
 
+    //! Returns a entirely new instance from this with deep copy
+    aiMetadata *Clone(void) const {
+        aiMetadata *clone = nullptr;
+        return clone;
+    }
+
 #endif // __cplusplus
 };
 

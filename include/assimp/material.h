@@ -923,6 +923,12 @@ public:
     static void CopyPropertyList(aiMaterial *pcDest,
             const aiMaterial *pcSrc);
 
+    //! Returns a entirely new instance from this with deep copy
+    aiMaterial *Clone(void) const {
+        aiMaterial *clone = nullptr;
+        return clone;
+    }
+
 #endif
 
     /** List of all material properties loaded. */

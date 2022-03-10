@@ -211,6 +211,13 @@ struct aiTexture {
     ~aiTexture () {
         delete[] pcData;
     }
+
+    //! Returns a entirely new instance from this with deep copy
+    aiTexture *Clone(void) const {
+        aiTexture *clone = nullptr;
+        return clone;
+    }
+
 #endif
 };
 

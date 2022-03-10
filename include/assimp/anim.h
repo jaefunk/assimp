@@ -471,6 +471,13 @@ struct aiAnimation {
             delete[] mMorphMeshChannels;
         }
     }
+
+    //! Returns a entirely new instance from this with deep copy
+    aiAnimation *Clone(void) const {
+        aiAnimation *clone = nullptr;
+        return clone;
+    }
+
 #endif // __cplusplus
 };
 

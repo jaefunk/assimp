@@ -224,6 +224,12 @@ struct aiCamera {
         out.d4 = 1.f;
     }
 
+    //! Returns a entirely new instance from this with deep copy
+    aiCamera *Clone(void) const {
+        aiCamera *clone = nullptr;
+        return clone;
+    }
+
 #endif
 };
 

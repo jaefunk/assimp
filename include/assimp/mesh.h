@@ -934,6 +934,12 @@ struct aiMesh {
         return mTextureCoordsNames[pIndex];
     }
 
+    //! Returns a entirely new instance from this with deep copy
+    aiMesh* Clone(void) const {
+        aiMesh *clone = nullptr;
+        return clone;
+    }
+
 #endif // __cplusplus
 };
 

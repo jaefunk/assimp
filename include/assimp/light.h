@@ -248,6 +248,12 @@ struct aiLight {
     {
     }
 
+    //! Returns a entirely new instance from this with deep copy
+    aiLight *Clone(void) const {
+        aiLight *clone = nullptr;
+        return clone;
+    }
+
 #endif
 };
 
