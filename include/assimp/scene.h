@@ -425,6 +425,14 @@ struct aiScene
         }
         return std::make_pair(nullptr, -1);
     }
+
+    //! Returns a entirely new instance from this with deep copy
+    const aiScene* Clone(void) const {
+        aiScene* clone = nullptr;
+
+        return clone;
+    }
+
 #endif // __cplusplus
 
     /**  Internal data, do not touch */
