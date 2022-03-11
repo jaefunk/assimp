@@ -925,7 +925,8 @@ public:
 
     //! Returns a entirely new instance from this with deep copy
     aiMaterial *Clone(void) const {
-        aiMaterial *clone = nullptr;
+        aiMaterial* clone = new aiMaterial;
+        aiMaterial::CopyPropertyList(clone, this);
         return clone;
     }
 

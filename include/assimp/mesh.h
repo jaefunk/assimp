@@ -936,7 +936,74 @@ struct aiMesh {
 
     //! Returns a entirely new instance from this with deep copy
     aiMesh* Clone(void) const {
-        aiMesh *clone = nullptr;
+        aiMesh *clone = new aiMesh;
+
+        clone->mPrimitiveTypes = this->mPrimitiveTypes;
+
+        clone->mNumVertices = this->mNumVertices;
+        if (clone->mNumVertices > 0) {
+            if (this->HasPositions()) {
+                clone->mVertices = new aiVector3D[clone->mNumVertices];
+                memcpy(clone->mVertices, this->mVertices, sizeof(aiVector3D) * clone->mNumVertices);
+            }
+            if (this->HasNormals()) {
+                clone->mNormals = new aiVector3D[clone->mNumVertices];
+                memcpy(clone->mNormals, this->mNormals, sizeof(aiVector3D) * clone->mNumVertices);
+            }
+            if (this->HasTangentsAndBitangents()) {
+                clone->mTangents = new aiVector3D[clone->mNumVertices];
+                memcpy(clone->mTangents, this->mTangents, sizeof(aiVector3D) * clone->mNumVertices);
+                clone->mBitangents = new aiVector3D[clone->mNumVertices];
+                memcpy(clone->mBitangents, this->mBitangents, sizeof(aiVector3D) * clone->mNumVertices);
+            }
+
+            for (unsigned int index = 0u; index < AI_MAX_NUMBER_OF_COLOR_SETS; index++) {
+                if (this->HasVertexColors(index)) {
+                    clone->mColors[index] = new aiColor4D[clone->mNumVertices];
+                    memcpy(&(clone->mColors[index]), &(this->mColors[index]), sizeof(aiColor4D) * clone->mNumVertices);
+                }
+            }
+        }
+
+        for (unsigned int index = 0u; index < AI_MAX_NUMBER_OF_TEXTURECOORDS; index++) {
+            if (this->HasTextureCoords(index)) {
+                clone->mNumUVComponents[index] = this->mNumUVComponents[index];
+                clone->mTextureCoords[index] = new aiVector3D[clone->mNumUVComponents[index]];
+                memcpy(&(clone->mTextureCoords[index]), &(this->mTextureCoords[index]), sizeof(aiVector3D) * clone->mNumUVComponents[index]);
+            }
+            if (this->HasTextureCoordsName(index)) {
+                clone->SetTextureCoordsName(index, *(this->GetTextureCoordsName(index)));
+            }
+        }
+
+        if (this->HasFaces()) {
+            clone->mNumFaces = this->mNumFaces;
+            clone->mFaces = new aiFace[clone->mNumFaces];
+            for (unsigned int index = 0u; index < clone->mNumFaces; ++index) {
+                clone->mFaces[index].mNumIndices = this->mFaces[index].mNumIndices;
+                clone->mFaces[index].mIndices = new unsigned int[clone->mFaces[index].mNumIndices];
+                memcpy(clone->mFaces[index].mIndices, this->mFaces[index].mIndices, sizeof(unsigned int) * clone->mFaces[index].mNumIndices);
+            }
+        }
+
+        if (this->HasBones()) {
+            clone->mNumBones = this->mNumBones;
+            clone->mBones = new aiBone *[clone->mNumBones];
+            for (unsigned int index = 0u; index < clone->mNumBones; ++index) {
+                this->mBones[index] = new aiBone;
+            }
+        }
+
+        clone->mMaterialIndex = this->mMaterialIndex;
+
+        clone->mNumAnimMeshes = this->mNumAnimMeshes;
+        clone->mAnimMeshes = this->mAnimMeshes;
+
+        clone->mMethod = this->mMethod;
+
+        clone->mAABB = this->mAABB;
+
+
         return clone;
     }
 

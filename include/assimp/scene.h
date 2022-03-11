@@ -171,8 +171,33 @@ struct ASSIMP_API aiNode
     void addChildren(unsigned int numChildren, aiNode **children);
 
     //! Returns a entirely new instance from this with deep copy
-    aiNode *Clone(void) const {
-        aiNode *clone = nullptr;
+    aiNode* Clone(aiNode* parent = nullptr) const {
+        aiNode* clone = new aiNode;
+
+        clone->mName = this->mName;
+
+        clone->mTransformation = this->mTransformation;
+
+        clone->mParent = parent;
+
+        clone->mNumChildren = this->mNumChildren;
+        if (clone->mNumChildren > 0) {
+            clone->mChildren = new aiNode *[clone->mNumChildren];
+            for (unsigned int index = 0u; index < clone->mNumChildren; ++index) {
+                clone->mChildren[index] = this->mChildren[index]->Clone(clone);
+            }
+        }
+
+        clone->mNumMeshes = this->mNumMeshes;
+        if (clone->mNumMeshes) {
+            clone->mMeshes = new unsigned int[clone->mNumMeshes];
+            for (unsigned int index = 0u; index < clone->mNumMeshes; ++index) {
+                clone->mMeshes[index] = this->mMeshes[index];
+            }
+        }
+
+        clone->mMetaData = this->mMetaData->Clone();
+
         return clone;
     }
 
@@ -444,39 +469,51 @@ struct aiScene
         clone->mRootNode = this->mRootNode->Clone();
 
         clone->mNumMeshes = this->mNumMeshes;
-        clone->mMeshes = new aiMesh *[clone->mNumMeshes];
-        for (unsigned int index = 0u; index < clone->mNumMeshes; ++index) {
-            clone->mMeshes[index] = clone->mMeshes[index]->Clone();
+        if (clone->mNumMeshes > 0) {
+            clone->mMeshes = new aiMesh *[clone->mNumMeshes];
+            for (unsigned int index = 0u; index < clone->mNumMeshes; ++index) {
+                clone->mMeshes[index] = this->mMeshes[index]->Clone();
+            }
         }
 
         clone->mNumMaterials = this->mNumMaterials;
-        clone->mMaterials = new aiMaterial *[clone->mNumMaterials];
-        for (unsigned int index = 0u; index < clone->mNumMaterials; ++index) {
-            clone->mMaterials[index] = clone->mMaterials[index]->Clone();
+        if (clone->mNumMaterials > 0) {
+            clone->mMaterials = new aiMaterial *[clone->mNumMaterials];
+            for (unsigned int index = 0u; index < clone->mNumMaterials; ++index) {
+                clone->mMaterials[index] = this->mMaterials[index]->Clone();
+            }
         }
 
         clone->mNumAnimations = this->mNumAnimations;
-        clone->mAnimations = new aiAnimation *[clone->mNumAnimations];
-        for (unsigned int index = 0u; index < clone->mNumMaterials; ++index) {
-            clone->mAnimations[index] = clone->mAnimations[index]->Clone();
+        if (clone->mNumAnimations > 0) {
+            clone->mAnimations = new aiAnimation *[clone->mNumAnimations];
+            for (unsigned int index = 0u; index < clone->mNumAnimations; ++index) {
+                clone->mAnimations[index] = this->mAnimations[index]->Clone();
+            }
         }
 
         clone->mNumTextures = this->mNumTextures;
-        clone->mTextures = new aiTexture *[clone->mNumTextures];
-        for (unsigned int index = 0u; index < clone->mNumMaterials; ++index) {
-            clone->mTextures[index] = clone->mTextures[index]->Clone();
+        if (clone->mNumTextures > 0) {
+            clone->mTextures = new aiTexture *[clone->mNumTextures];
+            for (unsigned int index = 0u; index < clone->mNumTextures; ++index) {
+                clone->mTextures[index] = this->mTextures[index]->Clone();
+            }
         }
 
         clone->mNumLights = this->mNumLights;
-        clone->mLights = new aiLight *[clone->mNumLights];
-        for (unsigned int index = 0u; index < clone->mNumMaterials; ++index) {
-            clone->mLights[index] = clone->mLights[index]->Clone();
+        if (clone->mNumLights > 0) {
+            clone->mLights = new aiLight *[clone->mNumLights];
+            for (unsigned int index = 0u; index < clone->mNumLights; ++index) {
+                clone->mLights[index] = this->mLights[index]->Clone();
+            }
         }
 
         clone->mNumCameras = this->mNumCameras;
-        clone->mCameras = new aiCamera *[clone->mNumCameras];
-        for (unsigned int index = 0u; index < clone->mNumMaterials; ++index) {
-            clone->mCameras[index] = clone->mCameras[index]->Clone();
+        if (clone->mNumCameras > 0) {
+            clone->mCameras = new aiCamera *[clone->mNumCameras];
+            for (unsigned int index = 0u; index < clone->mNumCameras; ++index) {
+                clone->mCameras[index] = this->mCameras[index]->Clone();
+            }
         }
 
         clone->mMetaData = this->mMetaData->Clone();
